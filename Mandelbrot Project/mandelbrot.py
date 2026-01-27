@@ -81,3 +81,4 @@ if __name__ == "__main__":
     plt.show()
 
     print(f"Wrote {Output_file}")
+    print("Keala was here!")
