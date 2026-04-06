@@ -1,6 +1,7 @@
 import numpy as np 
 import pandas as pd  # just using to load in the dataset
 from sklearn.model_selection import train_test_split # using for spliting data into training/testing sets
+import matplotlib.pyplot as plt
 
 df = pd.read_excel("real_estate.xlsx")
 y = df[["Y house price of unit area"]]
@@ -14,6 +15,8 @@ y = y.values   # changing from pandas df to numpy array
 
 # setting random seed for reproducibility
 np.random.seed(234)
+
+X = (X - X.mean(axis=0)) / X.std(axis = 0)
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 30) # splitting data
@@ -108,8 +111,30 @@ nn.train(X_train, y_train, epochs = 2600, learning_rate = 0.01)
 
 y_pred = nn.predict(X_test)
 
-# computing RMSE
-rmse_test = np.sqrt(np.mean((y_test - y_pred) ** 2))
+plt.figure(figsize=(6,6))
 
-print(f"Test RMSE: {rmse_test:.6f}")
-# testing RMSE was 16.887
+# scatter plot
+plt.scatter(y_test, y_pred, alpha=0.7)
+
+# perfect prediction line
+min_val = min(y_test.min(), y_pred.min())
+max_val = max(y_test.max(), y_pred.max())
+plt.plot([min_val, max_val], [min_val, max_val], 'r--')
+
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Real vs Predicted House Prices")
+
+plt.grid(True)
+plt.show()
+
+# # computing RMSE
+# rmse_test = np.sqrt(np.mean((y_test - y_pred) ** 2))
+
+# print(f"Test RMSE: {rmse_test:.6f}")
+# # testing RMSE was 16.887
+# # once the predictors were normalized, the test RMSE lowed to 11.415
+
+
+p = nn.predict(X_test[6])
+print(p)
